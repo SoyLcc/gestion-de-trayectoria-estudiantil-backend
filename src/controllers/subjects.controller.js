@@ -11,6 +11,12 @@ subjectCtrl.getSubjects =  async (req, res) => {
     res.json(subjects);
 };
 
+subjectCtrl.getSubjectsByFilter = async (req, res) => {
+    let axis = req.params.axis;
+    const subjects = await Subject.where({axis});
+    res.json(subjects);
+};
+
 subjectCtrl.createSubject = async (req, res) => {
     const { key, name, type, credits, theory, lab, axis, minCredits, requirements } = req.body;
     const newSubject = new Subject({

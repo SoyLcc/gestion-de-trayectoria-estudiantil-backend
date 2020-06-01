@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const { getSubject, getSubjects, createSubject, updateSubject, deleteSubject } = require('../controllers/subjects.controller');
+const { getSubject, getSubjects, createSubject, updateSubject, deleteSubject, getSubjectsByFilter } = require('../controllers/subjects.controller');
 
 router.route('/')
     .get(getSubjects)
@@ -11,5 +11,9 @@ router.route('/:id')
     .post(createSubject)
     .put(updateSubject)
     .delete(deleteSubject);
+
+router.route('/axis/:axis')
+    .get(getSubjectsByFilter);
+
 
 module.exports = router;
