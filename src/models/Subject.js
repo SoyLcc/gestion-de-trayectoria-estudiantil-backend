@@ -4,13 +4,15 @@ const subjectSchema = new Schema ({
     key: Number,
     name: {
         type: String,
-        required: true,
         trim: true
     },
-    description: String,
+    type: String,
     credits: Number,
-    hours: Number,
-    father: Number
+    theory: Number,
+    lab: Number,
+    axis: String,
+    minCredits: Number,
+    requirements: String,
 });
 
 module.exports = model('subject', subjectSchema);

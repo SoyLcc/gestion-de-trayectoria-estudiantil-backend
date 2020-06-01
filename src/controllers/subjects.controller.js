@@ -12,13 +12,17 @@ subjectCtrl.getSubjects =  async (req, res) => {
 };
 
 subjectCtrl.createSubject = async (req, res) => {
-    const { key, name, description, credits, hours } = req.body;
+    const { key, name, type, credits, theory, lab, axis, minCredits, requirements } = req.body;
     const newSubject = new Subject({
-        key,
-        name,
-        description,
-        credits,
-        hours,
+        key, 
+        name, 
+        type, 
+        credits, 
+        theory, 
+        lab, 
+        axis, 
+        minCredits, 
+        requirements
     })
     await newSubject.save();
     console.log(newSubject);
@@ -26,13 +30,17 @@ subjectCtrl.createSubject = async (req, res) => {
 };
 
 subjectCtrl.updateSubject =  async (req, res) => {
-    const { key, name, description, credits, hours } = req.body;
+    const { key, name, type, credits, theory, lab, axis, minCredits, requirements } = req.body;
     await Subject.findOneAndUpdate({_id:req.params.id}, {
-        key,
-        name,
-        description,
-        credits,
-        hours,
+        key, 
+        name, 
+        type, 
+        credits, 
+        theory, 
+        lab, 
+        axis, 
+        minCredits, 
+        requirements
     });
     res.json({message: 'Subject Updated'})
 };
