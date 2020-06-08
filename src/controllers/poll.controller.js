@@ -25,12 +25,16 @@ pollCtrl.createPoll = async (req, res) => {
 };
 
 pollCtrl.updatePoll =  async (req, res) => {
-    const { title, description, isActive, subjects } = req.body;
-    await Poll.findOneAndUpdate({_id:req.params.id}, {
-        title,
-        description,
-        isActive,
-        subjects
+    let params = { 
+        title: req.body.title,
+        description: req.body.description, 
+        isActive: req.body.isActive,
+        subjects: req.body.subjects
+    };
+    for(let prop in params) if(params[prop] === undefined) delete params[prop];
+
+    await Poll.findOneAndUpdate({_id:req.params.id}, { 
+        $set: params
     });
     res.json({message: 'Poll Updated'});
 };
