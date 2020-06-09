@@ -12,10 +12,13 @@ userCtrl.getUsers =  async (req, res) => {
 };
 
 userCtrl.createUser = async (req, res) => {
-    const { key, name, description, credits, hours } = req.body;
+    const { student_id, name, lastname, password, role } = req.body;
     const newUser = new User({
         student_id,
         name,
+        lastname,
+        password,
+        role
     })
     await newUser.save();
     console.log(newUser);
@@ -23,10 +26,13 @@ userCtrl.createUser = async (req, res) => {
 };
 
 userCtrl.updateUser =  async (req, res) => {
-    const { key, name, description, credits, hours } = req.body;
+    const { student_id, name, lastname, password, role } = req.body;
     await User.findOneAndUpdate({_id:req.params.id}, {
         student_id,
         name,
+        lastname,
+        password,
+        role
     });
     res.json({message: 'User Updated'})
 };
