@@ -19,14 +19,14 @@ const userSchema = new Schema ({
     password: {
         type: String,
         required: [true, 'Please provide a password'],
-        minlength: 8,
+        minlength: 4,
         select: false,
     },
     role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user',
-      },
+    },
 });
 
 
@@ -51,8 +51,24 @@ userSchema.pre('save', async function (next) {
   
     //Hash the password with cost of 12 (the higher, the longer it takes)
     this.password = await bcrypt.hash(this.password, 12);
-  
     next();
-  });
+});
+
+userSchema.pre("update", async function(next) {
+    console.log("update");
+    //"isModified" Method in all documents to check if that field was modified
+    if (!this.isModified('password')) return next();
+    //Hash the password with cost of 12 (the higher, the longer it takes)
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
+});
+/* INSTANCE METHODS
+ *
+ */
+//Instance METHOD - AVAILABLE IN ALL DOCUMENTS OF THIS COLLETION
+// This one compare the password provided in the login form and the one saved on the DB
+userSchema.methods.validatePassword = async function (candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 module.exports = model('user', userSchema);
