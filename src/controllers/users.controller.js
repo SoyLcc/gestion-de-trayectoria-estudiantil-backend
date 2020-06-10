@@ -26,14 +26,16 @@ userCtrl.createUser = async (req, res) => {
 };
 
 userCtrl.updateUser =  async (req, res) => {
-    const { student_id, name, lastname, password, role } = req.body;
-    await User.findOneAndUpdate({_id:req.params.id}, {
-        student_id,
-        name,
-        lastname,
-        password,
-        role
-    });
+    let params = { 
+        student_id: req.body.student_id,
+        name: req.body.name, 
+        lastname: req.body.lastname,
+        password: req.body.password,
+        role: req.body.role
+    };
+    for(let prop in params) if(params[prop] === undefined) delete params[prop];
+
+    await User.findOneAndUpdate({_id:req.params.id}, { $set: params });
     res.json({message: 'User Updated'})
 };
 
