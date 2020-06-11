@@ -54,12 +54,9 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-userSchema.pre("update", async function(next) {
-    console.log("update");
-    //"isModified" Method in all documents to check if that field was modified
-    if (!this.isModified('password')) return next();
-    //Hash the password with cost of 12 (the higher, the longer it takes)
-    this.password = await bcrypt.hash(this.password, 12);
+userSchema.pre("findOneAndUpdate", async function(next) {
+    newPassword = this._update.$set.password;
+    this._update.$set.password = await bcrypt.hash(newPassword, 12);
     next();
 });
 /* INSTANCE METHODS
