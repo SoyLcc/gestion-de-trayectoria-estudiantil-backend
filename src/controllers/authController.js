@@ -30,7 +30,7 @@ const createSendToken = (user, statusCode, req, res) => {
   
     res.status(statusCode).json({
       status: 'sucess',
-      // token, //Sending the token back to the client
+      token, //Sending the token back to the client
       data: {
         user: user,
       },
@@ -47,10 +47,11 @@ exports.login = catchAsync(async (req, res, next) => {
   
     // 2) Check if user eists && password is correct
     const user = await User.findOne({ student_id }).select('+password'); //+"name_of_field" to show passwords that we defined to not show up with "select: false" in the Schema
-    console.log(user);
+
     if (!user || !(await user.validatePassword(password, user.password))) {
       return next(new AppError('Incorrect student_id or password', 401));
     }
+
     // 3) If everything ok, send token to client
     createSendToken(user, 200, req, res);
   });
