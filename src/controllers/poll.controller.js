@@ -2,7 +2,7 @@ const pollCtrl = {};
 const Poll = require('../models/Poll');
 
 pollCtrl.getPoll =  async (req, res) => {
-    const poll = await Poll.find(req.params.id);
+    const poll = await Poll.findOne({_id:req.params.id});
     res.json(poll);
 };
 
