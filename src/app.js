@@ -13,5 +13,6 @@ app.use(express.json());
 app.use('/api/users', require('./routes/users'));
 app.use('/api/subjects', require('./routes/subjects'));
 app.use('/api/polls', require('./routes/polls'));
+app.use('/api/votes', require('./routes/votes'));
 
 module.exports = app;
