@@ -13,7 +13,7 @@ voteCtrl.getVotes =  async (req, res) => {
 };
 
 voteCtrl.getMyVotes =  async (req, res) => {
-    const { poll, user } = req.body;
+    const { poll, user } = req.query;
     Vote.find({'user': user, 'poll': poll}).exec(function (err, votes) {
         if (err || !votes) {
             return res.send({
@@ -26,19 +26,26 @@ voteCtrl.getMyVotes =  async (req, res) => {
             })
             Subject.find({'_id':{$in:subjects_ids}}).exec(function (err, subjects) {
                 if (!err) {
-                    console.log(subjects)
                     res.json(subjects);
                 }
             });
         }
     });
 };
-async function getSubject(id) {
-    return await Subject.find(id);
-};
 
 voteCtrl.createVote = async (req, res) => {
     const { poll, subjects, user } = req.body;
+
+    //if already voted the poll,find the past votes
+    const votes = await Vote.find({'user': user, 'poll': poll});
+
+    if(votes) {
+        //delete the votes
+        votes.forEach(vote => {
+            vote.remove();
+        });
+    }
+   
     subjects.forEach(subject => {
         const newVote = new Vote({
             poll,
@@ -46,7 +53,6 @@ voteCtrl.createVote = async (req, res) => {
             user,
         });
         newVote.save();
-        console.log(newVote);
     });
     res.json({message: 'Adding Votations'});
 };
