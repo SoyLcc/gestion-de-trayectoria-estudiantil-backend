@@ -10,7 +10,7 @@ router.route('/')
     .post(createVote);
 
 router.route('/:id')
-    .get(getVote)
+    .get(getVotes)
     .post(createVote)
     .put(updateVote)
     .delete(deleteVote);

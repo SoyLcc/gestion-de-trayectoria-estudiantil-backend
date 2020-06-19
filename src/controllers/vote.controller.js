@@ -1,16 +1,39 @@
 const voteCtrl = {};
 const Vote = require('../models/Vote');
+const Poll = require('../models/Poll');
 const Subject = require('../models/Subject');
 
-voteCtrl.getVote =  async (req, res) => {
-    const vote = await Vote.findOne({_id:req.params.id});
-    res.json(vote);
+voteCtrl.getVotes =  async (req, res) => {
+    // const poll = await Poll.findOne({_id:req.params.id});
+    // poll.subjects.forEach(subject => {
+    //     subjectVotes = Vote.find({'poll': req.params.id, 'subject': subject._id});
+    //     totalVotes.push(subjectVotes);
+    // });
+    // console.log(totalVotes);
+
+    Poll.findOne({_id:req.params.id}).exec(function (err, poll) {
+        if (err || !poll) {
+            return res.send({
+                message: err || "No Poll Found"
+            });
+        } else {
+            subjects_ids = []; 
+            poll.subjects.forEach( subject => {
+                subjects_ids.push(subject._id);
+            })
+            Vote.find({'poll': req.params.id, 'subject': {$in: subjects_ids}}).exec(function (err, votes) {
+                if (!err) {
+                    res.json(votes);
+                }
+            });
+        }
+    });
 };
 
-voteCtrl.getVotes =  async (req, res) => {
-    const votes = await Vote.find();
-    res.json(votes);
-};
+// voteCtrl.getVotes =  async (req, res) => {
+//     const votes = await Vote.find();
+//     res.json(votes);
+// };
 
 voteCtrl.getMyVotes =  async (req, res) => {
     const { poll, user } = req.query;
