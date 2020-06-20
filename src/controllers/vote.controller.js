@@ -22,18 +22,16 @@ voteCtrl.getVotes =  async (req, res) => {
                 subjects_ids.push(subject._id);
             })
             Vote.find({'poll': req.params.id, 'subject': {$in: subjects_ids}}).exec(function (err, votes) {
-                if (!err) {
-                    res.json(votes);
-                }
+            
+                Subject.find({'_id':{$in:subjects_ids}}).exec(function (err, subjects) {
+                    if (!err) {
+                        res.json([subjects, votes]);
+                    }
+                });
             });
         }
     });
 };
-
-// voteCtrl.getVotes =  async (req, res) => {
-//     const votes = await Vote.find();
-//     res.json(votes);
-// };
 
 voteCtrl.getMyVotes =  async (req, res) => {
     const { poll, user } = req.query;
