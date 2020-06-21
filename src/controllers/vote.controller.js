@@ -17,11 +17,12 @@ voteCtrl.getVotes =  async (req, res) => {
             Vote.find({'poll': req.params.id, 'subject': {$in: subjects_ids}}).select('subject').exec(function (err, votes) {
                 Subject.find({'_id':{$in:subjects_ids}}).select('name').exec(function (err, subjects) {
                     if (!err) {
-                        votes_per_subject = []
-                        subjects.forEach( (subject) => {
-                            votes_per_subject.push(votes.filter(vote => (vote.subject).toString() == (subject._id).toString()).length)
+                        total_votes = []
+                        subjects.map((subject) => {
+                            var o = Object.assign({}, subject);
+                            o._doc.votes = votes.filter(vote => (vote.subject).toString() == (subject._id).toString()).length;
                         })
-                        res.json({subjects:subjects, votes:votes_per_subject});
+                        res.json(subjects);
                     }
                 });
             });
