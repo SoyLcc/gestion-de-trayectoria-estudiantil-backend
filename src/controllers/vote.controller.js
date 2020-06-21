@@ -4,13 +4,6 @@ const Poll = require('../models/Poll');
 const Subject = require('../models/Subject');
 
 voteCtrl.getVotes =  async (req, res) => {
-    // const poll = await Poll.findOne({_id:req.params.id});
-    // poll.subjects.forEach(subject => {
-    //     subjectVotes = Vote.find({'poll': req.params.id, 'subject': subject._id});
-    //     totalVotes.push(subjectVotes);
-    // });
-    // console.log(totalVotes);
-
     Poll.findOne({_id:req.params.id}).exec(function (err, poll) {
         if (err || !poll) {
             return res.send({
@@ -21,11 +14,14 @@ voteCtrl.getVotes =  async (req, res) => {
             poll.subjects.forEach( subject => {
                 subjects_ids.push(subject._id);
             })
-            Vote.find({'poll': req.params.id, 'subject': {$in: subjects_ids}}).exec(function (err, votes) {
-            
-                Subject.find({'_id':{$in:subjects_ids}}).exec(function (err, subjects) {
+            Vote.find({'poll': req.params.id, 'subject': {$in: subjects_ids}}).select('subject').exec(function (err, votes) {
+                Subject.find({'_id':{$in:subjects_ids}}).select('name').exec(function (err, subjects) {
                     if (!err) {
-                        res.json([subjects, votes]);
+                        votes_per_subject = []
+                        subjects.forEach( (subject) => {
+                            votes_per_subject.push(votes.filter(vote => (vote.subject).toString() == (subject._id).toString()).length)
+                        })
+                        res.json({subjects:subjects, votes:votes_per_subject});
                     }
                 });
             });
