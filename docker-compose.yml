@@ -23,15 +23,23 @@ services:
     networks:
       - app-network
     command: ./wait-for.sh db:27017 -- /home/projects/gestion-de-trayectoria-estudiantil-backend/node_modules/.bin/nodemon app.js
-    db:
-        image: mongo:latest-xenial
-        container_name: db
-        restart: unless-stopped
-        env_file: .env
-        environment:
-          - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
-          - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
-        volumes:  
-          - dbdata:/data/db   
-        networks:
-          - app-network  
+  db:
+    image: mongo:latest-xenial
+    container_name: db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    volumes:     
+      - dbdata:/data/db
+    networks:
+      - app-network  
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+  node_modules:  
