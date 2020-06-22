@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
 
-const URI = process.env.MONGODB_URI 
-    ? process.env.MONGODB_URI 
+const {
+    MONGO_USERNAME,
+    MONGO_PASSWORD,
+    MONGO_HOSTNAME,
+    MONGO_PORT,
+    MONGO_DB
+  } = process.env;
+
+const URL = process.env.mode == 'production'
+    ? `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`
     : 'mongodb://localhost/test';
 
-mongoose.connect(URI, {
+mongoose.connect(URL, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
