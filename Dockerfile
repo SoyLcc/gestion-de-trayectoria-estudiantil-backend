@@ -1,6 +1,6 @@
 FROM node:current-alpine
 
-RUN mkdir -p /home/prjects/gestion-de-trayectoria-estudiantil-backend/node_modules && chown -R node:node /home/projects/gestion-de-trayectoria-estudiantil-backend
+RUN mkdir -p /home/projects/gestion-de-trayectoria-estudiantil-backend/node_modules && chown -R node:node /home/projects/gestion-de-trayectoria-estudiantil-backend
 
 WORKDIR /home/projects/gestion-de-trayectoria-estudiantil-backend
 
